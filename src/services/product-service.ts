@@ -2,16 +2,29 @@ import { supabase } from "@/supabase/supabaseClient";
 import type { CreateProductForm, ProductsProps } from "@/types/auth";
 
 export async function productService() {
-    console.log('petición')
     const {data, error} = await supabase
         .from('products')
         .select()
     if(error){
-        console.log(error)
         throw new Error('Error al obtener los datos')
     }
-    console.log(data)
     return data as unknown as ProductsProps[]
+}
+
+export async function fetchProducts(page: number, pageSize: number = 20) {
+    const from = page * pageSize
+    const to = from + pageSize -1
+    const {data, error, count} = await supabase
+        .from('products')
+        .select('*', { count: "exact" })
+        .eq('is_active', true)
+        .range(from, to)
+        .order('created_at', { ascending: false })
+    if(error) throw new Error('Error al obtener productos')
+    return {
+        data: data as ProductsProps[],
+        count: count ?? 1
+    }
 }
 
 
