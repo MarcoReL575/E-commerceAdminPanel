@@ -32,6 +32,7 @@ export type ProductsInCart = {
   updated_at: string;
   url_image: string;
   cantidad: number;
+  isLiked: boolean;
 }
 
 export type CreateProductForm = {

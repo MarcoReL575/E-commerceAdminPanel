@@ -1,6 +1,7 @@
 import { PaginationComponent } from "@/components/DashboardLayout/pagination/PaginationComponent";
 import ProductCard from "@/components/DashboardLayout/Products/ProductCard";
 import { fetchProducts } from "@/services/product-service";
+import type { ProductsInCart } from "@/types/auth";
 import { useQuery } from "@tanstack/react-query"
 import { useState } from "react";
 
@@ -21,9 +22,14 @@ export default function HomePage() {
     <div className="flex flex-col space-y-10">
       <section className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
         {data?.data.length ? 
-        data.data.map((producto)=> (
-          <ProductCard key={producto.id} producto={producto} />
-        ))
+        data.data.map((producto)=> {
+            const productToCart: ProductsInCart = {
+              ...producto,
+              cantidad: 1,
+              isLiked: false
+            }
+          return <ProductCard key={producto.id} producto={productToCart} />
+        })
         :<div>No hay productos</div>
         }  
       </section>
