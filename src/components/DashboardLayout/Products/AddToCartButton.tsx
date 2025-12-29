@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { useProductsStore } from '@/store/useProductsStore'
 import type { ProductsInCart } from '@/types/auth'
+import { ShoppingCartIcon } from 'lucide-react'
 import { toast } from 'react-toastify'
 
 export default function AddToCartButton({product}: {product: ProductsInCart}) {
@@ -13,10 +14,11 @@ export default function AddToCartButton({product}: {product: ProductsInCart}) {
 
   return (
     <Button 
-        className='cursor-pointer' 
+        className='cursor-pointer w-full' 
         onClick={handleAddProductToCart}
     >
-        Agregar al Carrito
+      <ShoppingCartIcon />
+      Agregar al Carrito
     </Button>
   )
 }
