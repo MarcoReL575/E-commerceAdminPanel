@@ -61,3 +61,12 @@ export interface ProductsResponsePagination {
   data: ProductsProps[]
   count: number
 }
+
+export interface ProductsFiletrProps{
+  page: number, 
+  PAGE_SIZE: number,
+  category?: string | null;
+  maxPrice?: number | null;
+  minPrice?: number | null;
+  searchInput?: string | null; 
+}
