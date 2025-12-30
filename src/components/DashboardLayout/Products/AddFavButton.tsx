@@ -10,7 +10,6 @@ export default function AddFavButton({producto}: {producto: ProductsInCart}) {
     const handleAddToFav = ()=> {
         toggleToFav(producto)
     }
-    console.log(producto)
 
   return (
     <div className='absolute top-8 overflow-hidden right-8 size-9 rounded-full bg-white/50 flex items-center justify-center cursor-pointer hover:bg-white/70 '>

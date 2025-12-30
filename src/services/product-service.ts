@@ -1,5 +1,5 @@
 import { supabase } from "@/supabase/supabaseClient";
-import type { CreateProductForm, ProductsProps } from "@/types/auth";
+import type { CreateProductForm, ProductsFiletrProps, ProductsProps } from "@/types/auth";
 
 export async function productService() {
     const {data, error} = await supabase
@@ -11,20 +11,35 @@ export async function productService() {
     return data as unknown as ProductsProps[]
 }
 
-export async function fetchProducts(page: number, pageSize: number = 20) {
-    const from = page * pageSize
-    const to = from + pageSize -1
-    const {data, error, count} = await supabase
+export async function fetchProducts({ page, PAGE_SIZE, category, maxPrice, minPrice, searchInput }: ProductsFiletrProps ) {
+    const from = (page - 1) * PAGE_SIZE
+    const to = from + PAGE_SIZE -1
+    let query = supabase
         .from('products')
         .select('*', { count: "exact" })
         .eq('is_active', true)
         .range(from, to)
         .order('created_at', { ascending: false })
-    if(error) throw new Error('Error al obtener productos')
-    return {
-        data: data as ProductsProps[],
-        count: count ?? 1
+
+    if(searchInput?.trim()){
+        query = query.ilike('title', `%${searchInput.trim()}%`)
     }
+
+    if(category){
+        query = query.eq('category_id', category)
+    }
+    if(minPrice){
+        query = query.gte('price', minPrice)
+    }
+    if(maxPrice){
+        query = query.lte('price', maxPrice)
+    }
+    const { data, error, count } = await query
+
+    if (error) {
+        throw new Error(error.message)
+    }
+    return { data, count }
 }
 
 
