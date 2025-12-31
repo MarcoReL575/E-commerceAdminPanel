@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardTitle } from '@/components/ui/card'
 import { useProductsStore } from '@/store/useProductsStore'
+import { NavLink } from 'react-router'
 
 export default function TotalComponent() {
 
@@ -28,9 +29,11 @@ export default function TotalComponent() {
                 <span>${total}</span>
             </div>
         </CardContent>
-        <Button>
-            Proceder al Pago
-        </Button>
+        <NavLink to='/checkout' className='flex items-center justify-center'>
+            <Button>
+                Proceder al Pago
+            </Button>
+        </NavLink>
     </Card>
   )
 }
