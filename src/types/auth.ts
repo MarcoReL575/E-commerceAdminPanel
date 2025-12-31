@@ -1,4 +1,5 @@
 export type UserRole = 'user' | 'admin'
+export type Status = 'pendiente' | 'enProceso' | 'finalizado'
 
 export type CreateUserForm = {
   email: string;
@@ -69,4 +70,20 @@ export interface ProductsFiletrProps{
   maxPrice?: number | null;
   minPrice?: number | null;
   searchInput?: string | null; 
+}
+
+export interface FormCheckoutProducts {
+  name: string;
+  street: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  phone: string;
+}
+
+export interface OrdersProps {
+  user_id: string;
+  total: string;
+  status: Status;
 }

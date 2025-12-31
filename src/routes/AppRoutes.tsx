@@ -11,6 +11,7 @@ import DashboardPage from "@/pages/AdministratorPages/DashboardPage";
 import ProductsPage from "@/pages/AdministratorPages/ProductsPage";
 import OrdersPage from "@/pages/AdministratorPages/OrdersPage";
 import LogsPage from "@/pages/AdministratorPages/LogsPage";
+import CheckoutPage from "@/pages/UserPages/CheckoutPage";
 
 export default function AppRoutes() {
   return (
@@ -22,6 +23,7 @@ export default function AppRoutes() {
             <Route path="/"  element={ <HomePage />} />
             <Route path="/cart"  element={<CartPage />} />
             <Route path="/fav"  element={<FavPage />} />
+            <Route path="/checkout"  element={<CheckoutPage />} />
           </Route>
         </Route>
         {/* Rutas de Administrador */}
