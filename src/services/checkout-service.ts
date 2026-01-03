@@ -31,7 +31,7 @@ export async function addresCheckout({ addres, productsCart, user, totalOrder }:
             .insert({
                 user_id: user?.id,
                 total:  totalOrder,
-                status: 'pending'
+                status: 'pendiente'
             })
             .select()
             .single()
