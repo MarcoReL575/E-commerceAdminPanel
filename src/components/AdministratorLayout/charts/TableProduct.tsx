@@ -103,7 +103,7 @@ export default function TableProduct() {
             },
             {
                 accessorKey: 'status',
-                 header: ({column}) => (
+                header: ({column}) => (
                     <button
                         className="flex items-center space-x-1 hover:text-blue-600"
                         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}

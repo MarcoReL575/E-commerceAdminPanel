@@ -16,7 +16,7 @@ interface AuthStoreProps {
     reset: () => void;
 }
 
-export const useAuthStore = create<AuthStoreProps>()((set, get) => ({
+export const useAuthStore = create<AuthStoreProps>()((set) => ({
     user: null,
     session: null,
     profile: null,
