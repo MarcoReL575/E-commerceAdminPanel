@@ -25,20 +25,22 @@ export const AuthProvider = ({children}:{children: ReactNode})=> {
             console.error("Error fetching role:", error)
             return
         }
-        if(data.role){
-            setRole(data.role)
-        }
+        return data.role ?? "user"
     }
     
     useEffect(()=>{
         const initSesion = async ()=> {
             const { data, error } = await supabase.auth.getSession();
-            if(error) throw error;
+            if(error){ 
+                reset() 
+                throw error
+            };
             if(data.session) {
                 setSession(data.session);
                 setUser(data.session.user);
                 setIsLoading(false);
-                fetchRole(data.session.user.id)
+                const role = await fetchRole(data.session.user.id)
+                setRole(role)
             }
         };
         initSesion();
@@ -70,7 +72,6 @@ export const AuthProvider = ({children}:{children: ReactNode})=> {
         const {data, error} = await supabase.auth.signInWithPassword({
             email, password
         });
-        console.log(data)
         if(error) throw Error
     }
 

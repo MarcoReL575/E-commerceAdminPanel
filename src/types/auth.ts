@@ -1,5 +1,6 @@
 export type UserRole = 'user' | 'admin'
-export type Status = 'pendiente' | 'enProceso' | 'finalizado'
+export type Status = 'pendiente' | 'proceso' | 'completado'
+export const statusOption = ['pendiente', 'proceso', 'completado']
 
 export type CreateUserForm = {
   email: string;
@@ -86,4 +87,26 @@ export interface OrdersProps {
   user_id: string;
   total: string;
   status: Status;
+}
+
+export interface OrdersShcema {
+  id: string;
+  total: number;
+  status: Status;
+  created_at: string;
+  user_id: string;
+  profiles: {
+    username: string;
+  } | null
+}
+
+export interface OrderItemsSchema {
+  id: string;
+  quantity: number;
+  price: number;
+  products: {
+    id: string,
+    title: string,
+    url_image: string,
+  }
 }
