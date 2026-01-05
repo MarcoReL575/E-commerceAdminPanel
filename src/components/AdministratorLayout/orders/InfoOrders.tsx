@@ -24,8 +24,8 @@ export default function InfoOrders({ orderId }: {orderId: string | undefined}) {
                 <DialogTitle className="font-bold text-2xl">Información de la Orden</DialogTitle>
                 <section>
                     {orderInfo?.map((orderItem)=> (
-                        <>
-                            <article key={orderItem.id} className="grid grid-cols-4 space-x-4 p-4">
+                        <div key={orderItem.id}>
+                            <article  className="grid grid-cols-4 space-x-4 p-4">
                                 <div className='h-25 border border-gray-400'>
                                     <img src={orderItem.products.url_image} alt={orderItem.products.title} className="h-full w-full object-center " />
                                 </div>
@@ -42,7 +42,7 @@ export default function InfoOrders({ orderId }: {orderId: string | undefined}) {
                                 </div>
                             </article>
                             <hr className="border text-gray-500 w-full" />
-                        </>
+                        </div>
                     ))}
                 </section>
                 <div className="flex items-center justify-end">

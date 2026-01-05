@@ -47,7 +47,7 @@ export type CreateProductForm = {
   url_image?: FileList | null;
 }
 
-export type AppRole = 'ADMIN' | 'USER';
+export type AppRole = 'admin' | 'user';
 
 export interface Profile {
   id: string;
@@ -109,4 +109,40 @@ export interface OrderItemsSchema {
     title: string,
     url_image: string,
   }
+}
+
+export interface  BestSellingProduct{
+  id: string
+  title: string
+  url_image: string
+  total_sold: number
+  total_revenue: number
+}
+
+export interface BestSellingProductTable {
+  product_name: string
+  product_image: string
+  total_sold: number
+  total_revenue: number
+}
+
+export interface ProfileStats{
+  id: string;
+  email: string;
+  role: UserRole;
+  created_at: string;
+  username: string;
+}
+
+export interface BestSellingProducts {
+  id: string
+  title: string
+  url_image: string
+  total_sold: number
+  total_revenue: number
+}
+
+export type DateRange = {
+  from: Date
+  to: Date
 }

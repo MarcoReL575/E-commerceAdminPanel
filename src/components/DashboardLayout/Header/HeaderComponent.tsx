@@ -19,7 +19,7 @@ export default function HeaderComponent() {
     const role = useAuthStore((state)=> state.role)
 
     const isAdmin = ()=> {
-        return role === 'ADMIN' ? true : false
+        return role === 'admin' ? true : false
     }
     const handleSignOut = async()=> {
         signOutSession()

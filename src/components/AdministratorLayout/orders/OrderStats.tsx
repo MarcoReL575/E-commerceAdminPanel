@@ -2,7 +2,7 @@ import { type LucideIcon } from "lucide-react";
 
 interface Props{
     title: string;
-    stat: number | undefined;
+    stat: number | string | undefined;
     Icon: LucideIcon
 }
 

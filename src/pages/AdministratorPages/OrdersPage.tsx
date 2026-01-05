@@ -37,7 +37,7 @@ export default function OrdersPage() {
   if (isError) return <p>Error al cargar órdenes</p>
 
   return (
-    <section className="container mx-auto p-10 space-y-5">
+    <section className="container mx-auto py-10 px-5 space-y-5">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
         <OrderStats title='órdenes totales'  stat={orderStats.total} Icon={ClipboardListIcon}/>
         <OrderStats title="pendientes" stat={orderStats.pending} Icon={Clock1Icon}/>

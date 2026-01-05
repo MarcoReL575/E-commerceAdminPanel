@@ -17,7 +17,8 @@ export async function fetchOrderItems(orderId: string) {
             `)
             .eq('order_id', orderId)
         if(error) console.log(error)
-            return data as unknown as OrderItemsSchema[]
+        console.log(data)
+        return data as unknown as OrderItemsSchema[]
     } catch (error) {
         console.log(error)
     }
