@@ -2,18 +2,13 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { category } from '@/helpers/categoryList';
 import { formatDate } from '@/helpers/formatDate';
-import { useAdminStats } from '@/hooks/useAdminStats';
 import type { ProductsProps } from '@/types/auth'
 import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable, type ColumnDef, type ColumnFiltersState, type PaginationState } from '@tanstack/react-table'
 import { ArrowUpDown, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { CreateProduct } from './CreateProduct';
 
-export default function TableProduct() {
-
-    const { productsQuery } = useAdminStats()
-    const {data: products, isLoading} = productsQuery
-    if(isLoading) <div>Cargando...</div>
+export default function TableProduct({products}:{products: ProductsProps[] }) {
     
     const productsTable = useMemo(()=> {
         if(!products) return []
