@@ -1,12 +1,17 @@
-import {Avatar,AvatarFallback,AvatarImage} from "@/components/ui/avatar"
-import {DropdownMenu,DropdownMenuContent,DropdownMenuGroup,DropdownMenuItem,DropdownMenuLabel,DropdownMenuSeparator,DropdownMenuTrigger} from "@/components/ui/dropdown-menu"
+import {Avatar,AvatarFallback} from "@/components/ui/avatar"
+import {DropdownMenu,DropdownMenuContent,DropdownMenuItem,DropdownMenuLabel,DropdownMenuSeparator,DropdownMenuTrigger} from "@/components/ui/dropdown-menu"
 import {SidebarMenu,SidebarMenuButton,SidebarMenuItem,useSidebar} from "@/components/ui/sidebar"
+import { useAuth } from "@/services/authService"
 import { useAuthStore } from "@/store/useAuthStore"
-import { CreditCardIcon, DotSquareIcon, LogOutIcon, NotebookIcon, UserCircleIcon } from "lucide-react"
+import { ArrowLeft, DotSquareIcon, LogOutIcon  } from "lucide-react"
+import { useNavigate } from "react-router"
 
 export function NavUser() {
   const { isMobile } = useSidebar()
   const user = useAuthStore((state)=> state.user)
+  const { signOutSession } = useAuth()
+  const navigate = useNavigate()
+
   if(!user) return 
   return (
     <SidebarMenu>
@@ -48,23 +53,12 @@ export function NavUser() {
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <UserCircleIcon />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCardIcon />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <NotebookIcon />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuSeparator />   
+            <DropdownMenuItem onClick={()=> navigate('/')}>
+              <ArrowLeft />
+              Volver a Página Inicio
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={signOutSession}>
               <LogOutIcon />
               Log out
             </DropdownMenuItem>

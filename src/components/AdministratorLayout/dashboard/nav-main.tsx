@@ -1,5 +1,5 @@
 import {SidebarGroup,SidebarGroupContent,SidebarMenu,SidebarMenuButton,SidebarMenuItem} from "@/components/ui/sidebar"
-import { LayoutDashboardIcon, ListChecksIcon, ChartBarIcon, FolderIcon } from "lucide-react"
+import { LayoutDashboardIcon, ListChecksIcon, ChartBarIcon } from "lucide-react"
 import { NavLink } from "react-router"
 
 const navMain =[
@@ -17,11 +17,6 @@ const navMain =[
     title: "Órdenes",
     url: "/admin/orders",
     icon: ChartBarIcon,
-  },
-  {
-    title: "Logs",
-    url: "/admin/logs",
-    icon: FolderIcon,
   },
 ]
 

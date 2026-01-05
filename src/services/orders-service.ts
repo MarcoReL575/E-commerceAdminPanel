@@ -16,6 +16,5 @@ export async function fetchOrders(): Promise<OrdersShcema[]>  {
         `)
         .order("created_at", { ascending: false })
     if(error) throw error
-    console.log(data)
     return data as unknown as OrdersShcema[]   
 }

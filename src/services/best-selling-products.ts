@@ -23,6 +23,5 @@ export async function fetchBestSellingProducts(range: DateRange) {
     console.error("[fetchBestSellingProducts]", error);
     throw error;
   }
-  console.log(data)
   return (data ?? []) as BestSellingProduct[];
 }

@@ -21,8 +21,6 @@ export default function DashboardPage() {
     queryFn: ()=> fetchBestSellingProducts(dateRange),
   })
 
-  
-
   return (
     <>
       <section className="container mx-auto py-10 px-5 space-y-10">

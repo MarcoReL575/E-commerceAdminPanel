@@ -8,6 +8,7 @@ import ButtonGoogleForm from "./ButtonGoogleForm"
 import { useAuth } from "@/services/authService"
 import { useNavigate } from "react-router-dom"
 import { useAuthStore } from "@/store/useAuthStore"
+import { useEffect } from "react"
 
 
 export function SigninForm({ className, ...props }: React.ComponentProps<"div">) {
@@ -16,14 +17,17 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
     const { session } = useAuthStore()
     const { register, handleSubmit, formState:{ errors } } = useForm<CreateUserForm>()
 
-    if(session) navigate('/')
+    useEffect(() => {
+        if (session) {
+            navigate("/")
+        }
+    }, [session, navigate])
 
     const onSubmit = handleSubmit(async(data) => {    
         try {
             await signInWithEmail(data.email, data.password)
-            navigate("/")
         } catch (error) {
-            
+            throw error
         }
     });
 

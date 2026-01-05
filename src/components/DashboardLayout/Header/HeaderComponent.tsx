@@ -6,8 +6,6 @@ import { Button } from '../../ui/button'
 import { useAuth } from '@/services/authService'
 import { useAuthStore } from '@/store/useAuthStore'
 
-
-
 const navigation = [
     { name: 'Favoritos', href: '/fav', Icon: HeartIcon },
     { name: 'Mis Compras', href: '/cart', Icon: ShoppingCart },
@@ -17,13 +15,10 @@ export default function HeaderComponent() {
 
     const { signOutSession } = useAuth()
     const role = useAuthStore((state)=> state.role)
+    const isAdmin = role === 'admin'
 
-    const isAdmin = ()=> {
-        return role === 'admin' ? true : false
-    }
     const handleSignOut = async()=> {
         signOutSession()
-        console.log('click')
     }
 
     return (
@@ -48,7 +43,7 @@ export default function HeaderComponent() {
                         <div>
                             <LogoApp />
                         </div>
-                        <div className="hidden sm:ml-6 sm:flex sm: items-center">
+                        <div className="hidden sm:ml-6 sm:flex sm: items-center gap-4">
                             <div className="flex space-x-4">
                                 {navigation.map((item) => (
                                     <NavLink
@@ -61,7 +56,7 @@ export default function HeaderComponent() {
                                     </NavLink>
                                 ))}
                             </div>
-                            {isAdmin() && (
+                            {isAdmin && (
                                 <NavLink to="/admin" className=''>
                                     <Button variant="ghost">
                                         AdminPanel

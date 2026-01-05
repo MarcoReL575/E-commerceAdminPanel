@@ -1,37 +1,38 @@
-import type { AppRole, Profile } from '@/types/auth';
+import type { AppRole } from '@/types/auth';
 import type { Session, User } from '@supabase/supabase-js'
 import { create } from 'zustand'
 
 interface AuthStoreProps {
-    user: User | null;
-    session: Session | null;
-    isLoading: boolean;
+    user: User | null
+    session: Session | null
     role: AppRole | null
-    profile: Profile | null; 
-    setProfile: (profile: Profile | null) => void; 
-    setUser: (user: User | null) => void;
-    setRole: (role: AppRole | null) => void;
-    setSession: (session: Session | null) => void;
-    setIsLoading: (loading: boolean) => void;
-    reset: () => void;
+    isLoading: boolean
+    authInitialized: boolean  
+    setAuthInitialized: (v: boolean) => void
+    setUser: (user: User | null) => void
+    setSession: (session: Session | null) => void
+    setRole: (role: AppRole | null) => void
+    reset: () => void
 }
 
-export const useAuthStore = create<AuthStoreProps>()((set) => ({
+
+export const useAuthStore = create<AuthStoreProps>((set) => ({
     user: null,
     session: null,
-    profile: null,
-    isLoading: true,
     role: null,
-    setUser: (user)=> set({ user }),
+    isLoading: true,
+    authInitialized: false,
+    setAuthInitialized: (v) => set({ authInitialized: v, isLoading: false }),
+    setUser: (user) => set({ user }),
+    setSession: (session) => set({ session }),
     setRole: (role) => set({ role }),
-    setProfile: (profile) => set({ profile }),
-    setSession: (session)=> set({ session }),
-    setIsLoading: (loading)=> set({ isLoading: loading }),
-    reset: () => set({
-        user: null,
-        session: null,
-        profile: null,
-        role: null,
-        isLoading: false,
-    }),
-}));
+    reset: () =>
+        set({
+            user: null,
+            session: null,
+            role: null,
+            isLoading: false,
+            authInitialized: true,
+        }),
+}))
+
