@@ -146,3 +146,16 @@ export type DateRange = {
   from: Date
   to: Date
 }
+
+
+export interface UpdateProductProps {
+  id: string
+  title: string
+  description: string
+  price: number
+  stock: number
+  category: string
+  is_active: boolean
+  image?: File | null
+  currentImageUrl?: string | null
+}

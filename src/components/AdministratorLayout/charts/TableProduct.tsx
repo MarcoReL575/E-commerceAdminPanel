@@ -7,6 +7,7 @@ import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel
 import { ArrowUpDown, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { CreateProduct } from './CreateProduct';
+import { ButtonEditProduct } from './ButtonEditProduct';
 
 export default function TableProduct({products}:{products: ProductsProps[] }) {
     
@@ -107,13 +108,19 @@ export default function TableProduct({products}:{products: ProductsProps[] }) {
                         <ArrowUpDown className="w-4 h-4" />
                     </button>
                 ),
-                cell: (cell) => <span className="text-gray-900">{cell.getValue() as string}</span>
+                cell: ({getValue, row}) => {
+                    const status = getValue();
+                    const productId = row.original;
+                    return (
+                        <div className={`text-sm flex items-center gap-x-4`}>
+                            <span className={`p-2 rounded-lg ${status === 'Activo' ? 'bg-green-200 text-green-700' : 'bg-red-300 text-red-700'}'`}>
+                                {status}
+                            </span> 
+                            <ButtonEditProduct productId={productId} />
+                        </div>
+                    )
+                }
                 
-            },
-            {
-                accessorKey: 'created_at',
-                header: 'Fecha de Alta',
-                cell: (cell) => <span className="text-gray-900">{cell.getValue() as string}</span>
             },
         ], []
     )

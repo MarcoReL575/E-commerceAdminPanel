@@ -3,47 +3,81 @@ import { Button } from "../../ui/button";
 import { useForm } from "react-hook-form";
 import type { CreateProductForm } from "@/types/auth";
 import { ImagePlusIcon, XIcon } from "lucide-react";
-import { useState, type ChangeEvent } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import { createProduct } from "@/services/product-service";
 import { toast } from "react-toastify";
-import { AlertDialogCancel } from "@/components/ui/alert-dialog";
+import { useCreateOrEditProduct } from "@/store/useCreateOrEditProduct";
+import { updateProduct } from "@/services/update-products-service";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function CreateProductForm() {
-    const [images, setImages] = useState<File[]>([])
-    const [previews, setPreviews] = useState<string[]>([]);
+    const productToEdit = useCreateOrEditProduct((state)=> state.productToEdit)
+    const setStatusModal = useCreateOrEditProduct((state)=> state.setStatusModal)
+    const [images, setImages] = useState<File | null>(null)
+    const [previews, setPreviews] = useState<string | null>(null);
     const { register, handleSubmit, formState: { errors }, setValue, reset } = useForm<CreateProductForm>()
+    const queryClient = useQueryClient()
+
     
     const onSubmit = handleSubmit(async(data) => {
         try {
-            await createProduct(data)
-            toast.success('Producto creado exitosamente')
-            reset()
-            setImages([])
-            setPreviews([])
-            setValue("url_image", undefined)
+            if(productToEdit) {
+                await updateProduct({
+                    id: productToEdit.id,
+                    title: data.title,
+                    description: data.description,
+                    price: data.price,
+                    stock: data.stock,
+                    category: data.category,
+                    is_active: data.is_active === 'true',
+                    image: images,
+                    currentImageUrl: productToEdit.url_image
+                })
+                toast.success('Producto Editado')
+            } else {
+                await createProduct(data)
+                toast.success('Producto creado exitosamente')
+                reset()
+                setImages(null)
+                setPreviews(null)
+                setValue("url_image", undefined)
+            }
+            await queryClient.invalidateQueries({
+                queryKey: ['productosHome']
+            })
+            setStatusModal()
         } catch (error) {
-            
+            console.log(error)
+            toast.error('Ocurrió un error')
         }
-    })
+    });
+
+    useEffect(() => {
+        if (productToEdit?.url_image) {
+            setPreviews(productToEdit.url_image)
+        }
+    }, [productToEdit])
 
     const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const files = Array.from(e.target.files || []);
-        setImages(files);
-        const filePreviews: string[] = files.map(file => URL.createObjectURL(file));
-        setPreviews(filePreviews);
+        const file = e.target.files?.[0];
+        if(!file) return
+        setImages(file);
+        setPreviews(URL.createObjectURL(file));
+
+        const dataTransfer = new DataTransfer()
+        dataTransfer.items.add(file)
+        setValue("url_image", dataTransfer.files, { shouldValidate: true })
     };
 
-    const removeImage = (index: number) => {
-        const newImages = images.filter((_, i) => i !== index);
-        const newPreviews = previews.filter((_, i) => i !== index);
-        setImages(newImages);
-        setPreviews(newPreviews);
-        const dataTransfer = new DataTransfer();
-        newImages.forEach(file => dataTransfer.items.add(file));
-        setValue("url_image", dataTransfer.files, { shouldValidate: true });
+    const removeImage = () => {
+        setImages(null);
+        setPreviews(null);
+        setValue("url_image", undefined, { shouldValidate: true });
     };
 
-    const { onChange, ...registerRest } = register('url_image', {required: '*Debes subir al menos una imagen'})
+    const { onChange, ...registerRest } = register('url_image')
+
+    const statusDefault = productToEdit?.is_active === true ? 'true' : 'false'
 
   return (
     <form className="p-5 bg-white rounded-lg space-y-4" onSubmit={onSubmit}>
@@ -52,6 +86,7 @@ export function CreateProductForm() {
             <input 
                 type="text" 
                 className="border p-2 rounded-lg"
+                defaultValue={productToEdit?.title}
                 {...register('title', { required:'*El título es obligatorio' })}
             />
             {errors.title && <span className="text-red-400 font-semibold text-sm">{errors.title.message}</span>}
@@ -61,6 +96,7 @@ export function CreateProductForm() {
             <input 
                 type="text" 
                 className="border p-2 rounded-lg"
+                defaultValue={productToEdit?.description}
                 {...register('description', { required:'*La descripción es obligatoria' })}
             />
             {errors.description && <span className="text-red-400 font-semibold text-sm">{errors.description.message}</span>}
@@ -70,6 +106,7 @@ export function CreateProductForm() {
             <input 
                 type="number" 
                 className="border p-2 rounded-lg"
+                defaultValue={productToEdit?.price}
                 {...register('price', { required:'*El precio es obligatorio' })}
             />
             {errors.price && <span className="text-red-400 font-semibold text-sm">{errors.price.message}</span>}
@@ -79,6 +116,7 @@ export function CreateProductForm() {
             <input 
                 type="number" 
                 className="border p-2 rounded-lg"
+                defaultValue={productToEdit?.stock}
                 {...register('stock', { required:'*La cantidad de stock es obligatorio' })}
             />
             {errors.stock && <span className="text-red-400 font-semibold text-sm">{errors.stock.message}</span>}
@@ -86,6 +124,7 @@ export function CreateProductForm() {
         <div className="flex flex-col">
             <select
                 className="border p-2 rounded-lg"
+                defaultValue={productToEdit?.category_id}
                 {...register('category', { required:'*La categoría es obligatoria' })}
             >
                 <option value="">--Selecciona una categoría--</option>
@@ -101,6 +140,7 @@ export function CreateProductForm() {
             <label>Status:</label>
             <select
                 className="border p-2 rounded-lg"
+                defaultValue={statusDefault}
                 {...register('is_active', { required:'*La categoría es obligatoria' })}
             >
                 <option value="">--Selecciona un status--</option>
@@ -115,7 +155,6 @@ export function CreateProductForm() {
             <div className="relative border-2 border-dashed border-gray-300 rounded-xl p-6 hover:border-blue-500 hover:bg-blue-50 transition-colors group cursor-pointer">
                 <input 
                     type="file"
-                    multiple
                     accept="image/*"
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                     onChange={(e) => {
@@ -137,31 +176,29 @@ export function CreateProductForm() {
             </div>
 
             {/* Contenedor de Previsualización */}
-            {previews.length > 0 && (
-                <div className="grid grid-cols-3 sm:grid-cols-4 gap-4 mt-4 w-full">
-                    {previews.map((url, index) => (
-                        <div key={index} className="relative group aspect-square rounded-lg overflow-hidden border">
-                            <img 
-                                src={url} 
-                                alt="preview" 
-                                className="w-full h-full object-cover"
-                            />
-                            <button
-                                type="button"
-                                onClick={() => removeImage(index)}
-                                className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                            >
-                                <XIcon size={14} />
-                            </button>
-                        </div>
-                    ))}
+            {previews && (
+                <div className="relative aspect-square w-40 rounded-lg overflow-hidden border">       
+                    <img 
+                        src={previews} 
+                        alt="preview" 
+                        className="w-full h-full object-cover"
+                    />
+                    <button
+                        type="button"
+                        onClick={removeImage}
+                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1"
+                    >
+                        <XIcon size={14} />
+                    </button>
                 </div>
             )}
         </div>
         <div className="flex items-center justify-between">
-            <AlertDialogCancel className="bg-red-500 text-white hover:bg-red-400 cursor-pointer hover:text-white">Cancelar</AlertDialogCancel>
-            <Button type="submit" className="cursor-pointer">
-                Crear Producto
+            <Button type="submit">
+                {productToEdit ? 'Editar Producto': 'Crear Producto'}
+            </Button>
+            <Button variant='destructive' onClick={setStatusModal} className="px-10">
+                Cancelar
             </Button>
         </div>
     </form>
